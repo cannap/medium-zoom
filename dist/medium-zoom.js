@@ -1,6 +1,6 @@
 /*!
  * 
- *    medium-zoom v0.1.0
+ *    medium-zoom v0.1.1
  *    Medium-like zoom on your pictures in pure JavaScript
  *    Copyright (c) 2016 Francois Chalifour
  *    https://github.com/francoischalifour/medium-zoom
@@ -67,7 +67,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
@@ -81,16 +81,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {boolean} [options.metaClick=true] Enables the action on meta click
 	 */
 	var mediumZoom = function mediumZoom(selector) {
-	  var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	
-	  var _ref$margin = _ref.margin;
-	  var margin = _ref$margin === undefined ? 0 : _ref$margin;
-	  var _ref$background = _ref.background;
-	  var background = _ref$background === undefined ? '#fff' : _ref$background;
-	  var _ref$scrollOffset = _ref.scrollOffset;
-	  var scrollOffset = _ref$scrollOffset === undefined ? 48 : _ref$scrollOffset;
-	  var _ref$metaClick = _ref.metaClick;
-	  var metaClick = _ref$metaClick === undefined ? true : _ref$metaClick;
+	  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+	      _ref$margin = _ref.margin,
+	      margin = _ref$margin === undefined ? 0 : _ref$margin,
+	      _ref$background = _ref.background,
+	      background = _ref$background === undefined ? '#fff' : _ref$background,
+	      _ref$scrollOffset = _ref.scrollOffset,
+	      scrollOffset = _ref$scrollOffset === undefined ? 48 : _ref$scrollOffset,
+	      _ref$metaClick = _ref.metaClick,
+	      metaClick = _ref$metaClick === undefined ? true : _ref$metaClick;
 	
 	  __webpack_require__(2);
 	
@@ -174,7 +173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  var update = function update() {
-	    var newOptions = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	    var newOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	
 	    options = _extends({}, options, newOptions);
 	
@@ -188,6 +187,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var addEventListeners = function addEventListeners(type, listener) {
 	    images.forEach(function (image) {
 	      image.addEventListener(type, listener);
+	    });
+	  };
+	
+	  var destroy = function destroy() {
+	    images.forEach(function (image) {
+	      image.classList.remove('medium-zoom-image');
+	      image.removeEventListener('click', onClick);
 	    });
 	  };
 	
@@ -249,18 +255,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var viewportWidth = windowWidth - options.margin * 2;
 	    var viewportHeight = windowHeight - options.margin * 2;
 	
-	    var _target = target;
-	    var width = _target.width;
-	    var height = _target.height;
-	    var _target$naturalWidth = _target.naturalWidth;
-	    var naturalWidth = _target$naturalWidth === undefined ? +Infinity : _target$naturalWidth;
-	    var _target$naturalHeight = _target.naturalHeight;
-	    var naturalHeight = _target$naturalHeight === undefined ? +Infinity : _target$naturalHeight;
+	    var _target = target,
+	        width = _target.width,
+	        height = _target.height,
+	        _target$naturalWidth = _target.naturalWidth,
+	        naturalWidth = _target$naturalWidth === undefined ? +Infinity : _target$naturalWidth,
+	        _target$naturalHeight = _target.naturalHeight,
+	        naturalHeight = _target$naturalHeight === undefined ? +Infinity : _target$naturalHeight;
 	
-	    var _target$getBoundingCl = target.getBoundingClientRect();
-	
-	    var top = _target$getBoundingCl.top;
-	    var left = _target$getBoundingCl.left;
+	    var _target$getBoundingCl = target.getBoundingClientRect(),
+	        top = _target$getBoundingCl.top,
+	        left = _target$getBoundingCl.left;
 	
 	    var isCenterAligned = Math.abs(windowWidth / 2 - (left + width / 2)) <= 10;
 	
@@ -306,6 +311,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    toggle: triggerZoom,
 	    update: update,
 	    addEventListeners: addEventListeners,
+	    destroy: destroy,
 	    images: images,
 	    options: options
 	  };
@@ -369,7 +375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	// module
-	exports.push([module.id, ".medium-zoom-overlay {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  opacity: 0;\n  -webkit-transition: opacity 300ms;\n  transition: opacity 300ms;\n  will-change: opacity;\n}\n\n.medium-zoom--open .medium-zoom-overlay {\n  cursor: pointer;\n  cursor: -webkit-zoom-out;\n  cursor: zoom-out;\n  opacity: 1;\n}\n\n.medium-zoom-image {\n  cursor: pointer;\n  cursor: -webkit-zoom-in;\n  cursor: zoom-in;\n  -webkit-transition: all 300ms;\n  transition: all 300ms;\n}\n\n.medium-zoom-image--open {\n  position: relative;\n  z-index: 999;\n  cursor: pointer;\n  cursor: -webkit-zoom-out;\n  cursor: zoom-out;\n  will-change: transform;\n}\n", ""]);
+	exports.push([module.id, ".medium-zoom-overlay {\r\n  position: fixed;\r\n  top: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  opacity: 0;\r\n  -webkit-transition: opacity 300ms;\r\n  transition: opacity 300ms;\r\n  will-change: opacity;\r\n}\r\n\r\n.medium-zoom--open .medium-zoom-overlay {\r\n  cursor: pointer;\r\n  cursor: zoom-out;\r\n  opacity: 1;\r\n}\r\n\r\n.medium-zoom-image {\r\n  cursor: pointer;\r\n  cursor: zoom-in;\r\n  -webkit-transition: all 300ms;\r\n  transition: all 300ms;\r\n}\r\n\r\n.medium-zoom-image--open {\r\n  position: relative;\r\n  z-index: 999;\r\n  cursor: pointer;\r\n  cursor: zoom-out;\r\n  will-change: transform;\r\n}\r\n", ""]);
 	
 	// exports
 
