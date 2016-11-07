@@ -119,6 +119,10 @@ const mediumZoom = (selector, {
   }
 
   const destroy = () => {
+    document.removeEventListener('scroll', onScroll)
+    document.removeEventListener('keyup', onDismiss)
+    window.removeEventListener('resize', zoomOut)
+
     images.forEach(image => {
       image.classList.remove('medium-zoom-image')
       image.removeEventListener('click', onClick)

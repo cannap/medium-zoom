@@ -191,6 +191,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  var destroy = function destroy() {
+	    document.removeEventListener('scroll', onScroll);
+	    document.removeEventListener('keyup', onDismiss);
+	    window.removeEventListener('resize', zoomOut);
+	
 	    images.forEach(function (image) {
 	      image.classList.remove('medium-zoom-image');
 	      image.removeEventListener('click', onClick);
